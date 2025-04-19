@@ -18,7 +18,7 @@ spec:
     path: flask-guestbook  # subdirectory of the Helm chart
     helm:
       valueFiles:
-        - values/dev.yaml
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: guestbook
