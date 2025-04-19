@@ -1,0 +1,15 @@
+# infra-gitops/values/argocd-values.yaml
+
+server:
+  service:
+    type: NodePort
+  ingress:
+    enabled: false
+
+configs:
+  params:
+    server.insecure: true
+
+# Optional: disable Argo CD notifications if you're not using them yet
+notifications:
+  enabled: false
