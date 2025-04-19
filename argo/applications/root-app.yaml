@@ -9,6 +9,8 @@ spec:
     repoURL: https://github.com/eharriett0/infra-gitops.git
     targetRevision: main
     path: argo/applications
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -18,5 +20,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  directory:
-    recurse: true
