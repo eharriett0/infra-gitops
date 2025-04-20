@@ -11,7 +11,7 @@ spec:
     targetRevision: 0.12.1
     helm:
       valueFiles:
-        - values/argocd-image-updater-values.yaml  # relative to the Application repo, NOT Helm repo
+        - values/argocd-image-updater-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
