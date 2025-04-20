@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sentiment-service
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: latest
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/image-list: sentiment-service=ghcr.io/eharriett0/sentiment-service
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/eharriett0/app-deployments
+    targetRevision: HEAD
+    path: sentiment-service
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
