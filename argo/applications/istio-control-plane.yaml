@@ -10,8 +10,7 @@ spec:
     targetRevision: main
     path: istio/control-plane
     helm:
-      valueFiles:
-        - values.yaml
+      releaseName: istiod
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
@@ -19,3 +18,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,7 +1,6 @@
+### infra-gitops/istio/ingress/Chart.yaml
 apiVersion: v2
 name: istio-ingress
-version: 1.0.0
-dependencies:
-  - name: gateway
-    version: 1.25.2
-    repository: https://istio-release.storage.googleapis.com/charts
+description: Istio ingress gateway chart
+version: 1.25.2
+appVersion: 1.25.2

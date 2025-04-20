@@ -1,2 +1,12 @@
-global:
-  istioNamespace: istio-system
+### infra-gitops/istio/ingress/values.yaml
+gateways:
+  istio-ingressgateway:
+    autoscaleEnabled: false
+    type: NodePort
+    ports:
+      - port: 80
+        targetPort: 8080
+        name: http2
+      - port: 443
+        targetPort: 8443
+        name: https

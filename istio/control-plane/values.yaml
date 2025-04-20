@@ -1,8 +1,16 @@
-global:
-  istioNamespace: istio-system
-meshConfig:
-  ingressSelector: istio-ingress
-  ingressService: istio-ingress
 pilot:
-  env:
-    K8S_INGRESS_NS: istio-ingress
+  autoscaleEnabled: false
+  traceSampling: 100
+  configMap: true
+meshConfig:
+  enablePrometheusMerge: true
+  defaultConfig:
+    holdApplicationUntilProxyStarts: true
+    proxyMetadata:
+      ISTIO_META_DNS_CAPTURE: "true"
+      ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+    proxyStatsMatcher:
+      inclusionPrefixes:
+        - cluster.outbound
+        - listener.
+        - cluster.xds-grpc

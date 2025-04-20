@@ -10,11 +10,10 @@ spec:
     targetRevision: main
     path: istio/ingress
     helm:
-      valueFiles:
-        - values.yaml
+      releaseName: istio-ingress
   destination:
     server: https://kubernetes.default.svc
-    namespace: istio-ingress
+    namespace: istio-system
   syncPolicy:
     automated:
       prune: true
