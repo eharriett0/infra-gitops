@@ -6,12 +6,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/eharriett0/infra-gitops.git
-    targetRevision: main
-    path: argo/applications
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argocd-image-updater
+    targetRevision: 0.12.1
     helm:
       valueFiles:
-        - ../../values/argocd-image-updater-values.yaml
+        - values/argocd-image-updater-values.yaml  # relative to the Application repo, NOT Helm repo
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
