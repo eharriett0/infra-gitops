@@ -11,22 +11,18 @@ spec:
     targetRevision: 0.12.1
     helm:
       values: |
-        fullnameOverride: argocd-image-updater
+        image:
+          tag: v0.16.0
         config:
           argocd:
-            grpcWeb: true
-            serverAddress: "argocd-server.argocd.svc"
+            serverAddr: "argocd-server.argocd.svc"
             insecure: true
-          logLevel: info
-        rbac:
-          create: true
-        serviceAccount:
-          create: true
-          name: argocd-image-updater
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
     automated:
-      prune: true
       selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
