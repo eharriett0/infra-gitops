@@ -14,3 +14,9 @@ meshConfig:
         - cluster.outbound
         - listener.
         - cluster.xds-grpc
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 1
+  periodSeconds: 3
