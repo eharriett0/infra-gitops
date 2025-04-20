@@ -1,0 +1,9 @@
+extraVolumes:
+  - name: image-updater-config
+    secret:
+      secretName: argocd-image-updater-secret
+
+extraVolumeMounts:
+  - name: image-updater-config
+    mountPath: /app/config
+    readOnly: true

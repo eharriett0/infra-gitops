@@ -6,22 +6,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://argoproj.github.io/argo-helm
-    chart: argocd-image-updater
-    targetRevision: 0.12.1
+    repoURL: https://github.com/eharriett0/infra-gitops.git
+    targetRevision: main
+    path: argo/applications
     helm:
-      values: |
-        config:
-          registries:
-            - name: GitHub Container Registry
-              prefix: ghcr.io
-              credentials:
-                username: '{{ github.username }}'
-                password: '{{ github.token }}'
-          argocd:
-            serverAddr: "argocd-server.argocd.svc:443"
-            grpcWeb: true
-            insecure: true
+      valueFiles:
+        - ../../values/argocd-image-updater-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -29,5 +19,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
