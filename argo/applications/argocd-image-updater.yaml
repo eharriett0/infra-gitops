@@ -11,18 +11,23 @@ spec:
     targetRevision: 0.12.1
     helm:
       values: |
-        image:
-          tag: v0.16.0
         config:
+          registries:
+            - name: GitHub Container Registry
+              prefix: ghcr.io
+              credentials:
+                username: '{{ github.username }}'
+                password: '{{ github.token }}'
           argocd:
-            serverAddr: "argocd-server.argocd.svc"
+            serverAddr: "argocd-server.argocd.svc:443"
+            grpcWeb: true
             insecure: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
     automated:
-      selfHeal: true
       prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
