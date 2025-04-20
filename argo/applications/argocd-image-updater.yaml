@@ -10,15 +10,8 @@ spec:
     chart: argocd-image-updater
     targetRevision: 0.12.1
     helm:
-      values: |
-        config:
-          registries:
-            - name: ghcr
-              prefix: ghcr.io
-              credentials:
-                username: $GITHUB_USER
-                password: $GITHUB_TOKEN
-              default: true
+      valueFiles:
+        - values/argocd-image-updater-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
