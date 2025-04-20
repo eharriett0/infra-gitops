@@ -7,6 +7,11 @@ server:
     enabled: false
 
 configs:
+  registries:
+    enabled: true
+    secret:
+      name: argocd-image-updater-secret
+      key: registries.conf
   params:
     server.insecure: true
 
