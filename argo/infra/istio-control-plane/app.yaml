@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-ingress
+  name: istio-control-plane
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/eharriett0/infra-gitops.git
     targetRevision: main
-    path: istio/ingress
+    path: argo/infra/istio-control-plane
     helm:
-      releaseName: istio-ingress
+      releaseName: istiod
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
