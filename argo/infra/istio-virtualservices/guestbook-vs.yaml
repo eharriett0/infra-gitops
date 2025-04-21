@@ -1,0 +1,15 @@
+# argo/infra/istio-virtualservices/guestbook-vs.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: guestbook
+  namespace: istio-system
+spec:
+  hosts:
+    - guestbook.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: guestbook.guestbook.svc.cluster.local
+            port:
+              number: 80

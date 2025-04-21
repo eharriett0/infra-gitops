@@ -1,0 +1,15 @@
+# argo/infra/istio-virtualservices/sentiment-service-vs.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: sentiment-service
+  namespace: sentiment
+spec:
+  hosts:
+    - sentiment
+  http:
+    - route:
+        - destination:
+            host: sentiment
+            port:
+              number: 80
