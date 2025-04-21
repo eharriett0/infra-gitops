@@ -1,6 +1,0 @@
-### infra-gitops/istio/ingress/Chart.yaml
-apiVersion: v2
-name: istio-ingress
-description: Istio ingress gateway chart
-version: 1.25.2
-appVersion: 1.25.2

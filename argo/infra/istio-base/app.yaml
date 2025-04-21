@@ -3,12 +3,14 @@ kind: Application
 metadata:
   name: istio-base
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
-    repoURL: https://github.com/eharriett0/infra-gitops.git
-    targetRevision: main
-    path: argo/infra/istio-base
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    chart: base
+    targetRevision: 1.20.2 
     helm:
       releaseName: istio-base
   destination:

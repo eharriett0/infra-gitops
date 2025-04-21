@@ -3,14 +3,19 @@ kind: Application
 metadata:
   name: istio-ingress
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
   source:
-    repoURL: https://github.com/eharriett0/infra-gitops.git
-    targetRevision: main
-    path: argo/infra/istio-ingress
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    chart: gateway
+    targetRevision: 1.20.2
     helm:
       releaseName: istio-ingress
+      values: |
+        service:
+          type: LoadBalancer
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

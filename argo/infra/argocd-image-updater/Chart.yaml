@@ -1,6 +1,0 @@
-apiVersion: v2
-name: argocd-image-updater
-description: Argo CD Image Updater Chart
-type: application
-version: 0.1.0
-appVersion: "v0.12.1"

@@ -1,5 +1,0 @@
-apiVersion: v2
-name: istio-base
-description: Helm chart for installing Istio CRDs
-version: 1.25.2
-appVersion: 1.25.2
