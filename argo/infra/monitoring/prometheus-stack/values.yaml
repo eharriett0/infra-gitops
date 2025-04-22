@@ -253,6 +253,18 @@ coreDns:
     targetLimit: 0
 crds:
   enabled: true
+  alertmanager:
+    enabled: false
+  prometheus:
+    enabled: false
+  thanosRuler:
+    enabled: false
+  prometheusAgent:
+    enabled: false
+  alertmanagerConfig:
+    enabled: false
+  scrapeConfig:
+    enabled: false
   global:
     imagePullSecrets: []
     imageRegistry: ""
