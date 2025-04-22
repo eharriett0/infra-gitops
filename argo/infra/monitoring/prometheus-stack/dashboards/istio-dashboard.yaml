@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-istio
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  istio-dashboard.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "type": "dashboard"
+          }
+        ]
+      },
+      "title": "Istio Service Mesh",
+      "panels": [
+        {
+          "type": "graph",
+          "title": "Envoy Requests",
+          "targets": [
+            {
+              "expr": "sum(rate(istio_requests_total[1m])) by (destination_workload)",
+              "legendFormat": "{{destination_workload}}",
+              "interval": ""
+            }
+          ],
+          "datasource": "Prometheus"
+        }
+      ],
+      "schemaVersion": 30,
+      "version": 1
+    }

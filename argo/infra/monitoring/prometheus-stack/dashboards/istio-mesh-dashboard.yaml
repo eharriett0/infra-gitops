@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: istio-mesh-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/name: grafana
+data:
+  istio-mesh-dashboard.json: |
+    {{- $dashboard := (readFile "dashboards/istio-mesh.json") | nindent 4 -}}
+    {{ $dashboard }}

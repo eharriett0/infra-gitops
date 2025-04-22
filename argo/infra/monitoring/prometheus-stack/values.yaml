@@ -462,7 +462,10 @@ grafana:
   createConfigmap: true
   dashboardProviders: {}
   dashboards: {}
-  dashboardsConfigMaps: {}
+  dashboardsConfigMaps: 
+    istio-mesh-dashboard: true
+    istio-workload-dashboard: true
+    istio-dashboard: true
   datasources: {}
   defaultDashboardsEditable: true
   defaultDashboardsEnabled: true
