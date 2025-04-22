@@ -10,7 +10,6 @@ spec:
     chart: kube-prometheus-stack
     targetRevision: 70.4.2
     helm:
-      releaseName: monitoring
       valueFiles:
         - values.yaml
   destination:
