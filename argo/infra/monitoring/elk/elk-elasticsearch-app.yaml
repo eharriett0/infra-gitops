@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elk-elasticsearch
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: elk
+  source:
+    repoURL: https://helm.elastic.co
+    chart: elasticsearch
+    targetRevision: 8.5.1
+    helm:
+      values: |
+        replicas: 1
+        minimumMasterNodes: 1
+        tls:
+          selfSignedCertificate:
+            enabled: false
+        volumeMounts:
+          - name: certs
+            mountPath: /usr/share/elasticsearch/config/certs
+            readOnly: true
+        extraVolumes:
+          - name: certs
+            secret:
+              secretName: elasticsearch-master-certs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

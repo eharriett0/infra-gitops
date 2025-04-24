@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elk-kibana
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: elk
+  source:
+    repoURL: https://helm.elastic.co
+    chart: kibana
+    targetRevision: 8.5.1
+    helm:
+      values: |
+        service:
+          type: NodePort
+        elasticsearchHosts: "https://elasticsearch-master.elk.svc.cluster.local:9200"
+        elasticsearchSSL: true
+        elasticsearchCertificateAuthorities:
+          - /usr/share/kibana/config/certs/ca.crt
+        extraVolumes:
+          - name: elasticsearch-certs
+            secret:
+              secretName: elasticsearch-master-certs
+        extraVolumeMounts:
+          - name: elasticsearch-certs
+            mountPath: /usr/share/kibana/config/certs
+            readOnly: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
