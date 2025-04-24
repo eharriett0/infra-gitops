@@ -1,0 +1,6 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pre-install-elk-kibana-kibana
+  namespace: elk
+$patch: delete

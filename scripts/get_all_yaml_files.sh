@@ -10,6 +10,6 @@ cd "$REPO_ROOT" || exit 1
 # Generate the combined YAML dump
 find . -type f \( -name "*.yaml" -o -name "*.yml" \) \
   -exec echo -e "\n--- FILE: {} ---\n" \; \
-  -exec cat {} \; > "../$OUTPUT_FILE"
+  -exec cat {} \; > "$OUTPUT_FILE"
 
-echo "YAML dump created at ../$OUTPUT_FILE"
+echo "YAML dump created at $OUTPUT_FILE"
