@@ -2,3 +2,4 @@ infra-gitops-all-yaml-files.txt
 
 # fake cert for testing cert-manager
 test-cert.yaml
+plain-secret.yaml
