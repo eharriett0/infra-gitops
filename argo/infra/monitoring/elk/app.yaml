@@ -13,20 +13,27 @@ spec:
       chart: elasticsearch
       targetRevision: 21.6.2
       helm:
-        valueFiles:
-          - elasticsearch-values.yaml
+        values: |
+          replicas: 1
+          minimumMasterNodes: 1
     - repoURL: https://helm.elastic.co
       chart: kibana
       targetRevision: 8.5.1
       helm:
-        valueFiles:
-          - kibana-values.yaml
+        values: |
+          service:
+            type: NodePort
+          elasticsearchHosts: "http://elasticsearch-master.elk.svc.cluster.local:9200"
     - repoURL: https://charts.bitnami.com/bitnami
       chart: fluent-bit
       targetRevision: 2.3.0
       helm:
-        valueFiles:
-          - fluent-bit-values.yaml
+        values: |
+          backend:
+            type: es
+            es:
+              host: elasticsearch-master.elk.svc.cluster.local
+              port: 9200
   syncPolicy:
     automated:
       prune: true
