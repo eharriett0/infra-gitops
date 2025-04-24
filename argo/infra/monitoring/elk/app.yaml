@@ -16,6 +16,8 @@ spec:
         values: |
           replicas: 1
           minimumMasterNodes: 1
+          tls:
+            enabled: false
     - repoURL: https://helm.elastic.co
       chart: kibana
       targetRevision: 8.5.1
