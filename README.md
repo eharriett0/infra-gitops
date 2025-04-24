@@ -1,4 +1,5 @@
-# infra-gitops# ✅ Production Readiness Checklist
+# infra-gitops
+# ✅ Production Readiness Checklist
 
 This checklist tracks what’s needed to make this Kubernetes cluster secure, observable, and production-ready.
 
