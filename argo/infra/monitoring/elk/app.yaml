@@ -17,7 +17,8 @@ spec:
           replicas: 1
           minimumMasterNodes: 1
           tls:
-            enabled: false
+            selfSignedCertificate:
+              enabled: true
     - repoURL: https://helm.elastic.co
       chart: kibana
       targetRevision: 8.5.1
@@ -26,10 +27,17 @@ spec:
           service:
             type: NodePort
           elasticsearchHosts: "http://elasticsearch-master.elk.svc.cluster.local:9200"
-          elasticsearchSSL: false
-          elasticsearchCertificateAuthorities: []
-          security:
-            enabled: false
+          elasticsearchSSL: true
+          elasticsearchCertificateAuthorities:
+            - /usr/share/kibana/config/certs/ca.crt
+          extraVolumes:
+            - name: elasticsearch-certs
+              secret:
+                secretName: elasticsearch-master-certs
+          extraVolumeMounts:
+            - name: elasticsearch-certs
+              mountPath: /usr/share/kibana/config/certs
+              readOnly: true
     - repoURL: https://charts.bitnami.com/bitnami
       chart: fluent-bit
       targetRevision: 2.3.0
