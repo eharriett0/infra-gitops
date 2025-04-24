@@ -5,15 +5,28 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://github.com/eharriett0/infra-gitops.git
-    targetRevision: main
-    path: argo/infra/monitoring/elk
-    directory:
-      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: elk
+  sources:
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: elasticsearch
+      targetRevision: 19.7.1
+      helm:
+        valueFiles:
+          - elasticsearch-values.yaml
+    - repoURL: https://helm.elastic.co
+      chart: kibana
+      targetRevision: 8.5.1
+      helm:
+        valueFiles:
+          - kibana-values.yaml
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: fluent-bit
+      targetRevision: 2.3.0
+      helm:
+        valueFiles:
+          - fluent-bit-values.yaml
   syncPolicy:
     automated:
       prune: true

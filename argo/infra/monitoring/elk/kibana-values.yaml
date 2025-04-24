@@ -1,0 +1,3 @@
+service:
+  type: NodePort
+elasticsearchHosts: "http://elasticsearch-master.elk.svc.cluster.local:9200"

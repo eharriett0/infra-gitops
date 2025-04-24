@@ -1,0 +1,5 @@
+backend:
+  type: es
+  es:
+    host: elasticsearch-master.elk.svc.cluster.local
+    port: 9200
