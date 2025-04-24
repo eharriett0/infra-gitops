@@ -9,6 +9,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: elk
   sources:
+    - repoURL: https://github.com/eharriett0/infra-gitops
+      targetRevision: main
+      path: argo/infra/monitoring/elk/secrets
     - repoURL: https://helm.elastic.co
       chart: elasticsearch
       targetRevision: 8.5.1
