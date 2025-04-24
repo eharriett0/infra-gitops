@@ -16,6 +16,8 @@ spec:
     targetRevision: 8.5.1
     helm:
       values: |
+        preInstall:
+          enabled: false
         service:
           type: NodePort
         elasticsearchHosts: "https://elasticsearch-master.elk.svc:9200"
