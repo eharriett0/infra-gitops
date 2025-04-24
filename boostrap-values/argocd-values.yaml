@@ -21,3 +21,7 @@ notifications:
 
 annotations:
   argocd.argoproj.io/compare-options: IgnoreExtraneous
+
+controller:
+  parallelism:
+    limit: 20  # default is 10
