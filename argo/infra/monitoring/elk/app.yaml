@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: elk
   sources:
-    - repoURL: https://charts.bitnami.com/bitnami
+    - repoURL: https://helm.elastic.co
       chart: elasticsearch
       targetRevision: 21.6.2
       helm:
