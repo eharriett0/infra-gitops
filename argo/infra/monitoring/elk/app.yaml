@@ -11,7 +11,7 @@ spec:
   sources:
     - repoURL: https://charts.bitnami.com/bitnami
       chart: elasticsearch
-      targetRevision: 19.7.1
+      targetRevision: 21.6.2
       helm:
         valueFiles:
           - elasticsearch-values.yaml
