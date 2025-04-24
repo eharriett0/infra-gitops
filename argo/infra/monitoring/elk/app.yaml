@@ -28,6 +28,8 @@ spec:
           elasticsearchHosts: "http://elasticsearch-master.elk.svc.cluster.local:9200"
           elasticsearchSSL: false
           elasticsearchCertificateAuthorities: []
+          security:
+            enabled: false
     - repoURL: https://charts.bitnami.com/bitnami
       chart: fluent-bit
       targetRevision: 2.3.0
