@@ -14,6 +14,7 @@ spec:
     - elasticsearch-master
     - elasticsearch-master.elk
     - elasticsearch-master.elk.svc
+    - elasticsearch-master.elk.svc.cluster.local
   issuerRef:
     name: selfsigned-issuer
     kind: ClusterIssuer
