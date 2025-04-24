@@ -19,12 +19,12 @@ spec:
           auth:
             environment: development
             providers: {}
-          catalog:
-            locations:
-              - type: github
-                target: https://github.com/eharriett0/app-deployments
-                rules:
-                  - allow: [Component]
+        catalog:
+          locations:
+            - type: url
+              target: https://raw.githubusercontent.com/eharriett0/app-deployments/main/sentiment-service/catalog-info.yaml
+            - type: url
+              target: https://raw.githubusercontent.com/eharriett0/app-deployments/main/flask-guestbook/catalog-info.yaml
 
         ingress:
           enabled: false # using Istio instead
