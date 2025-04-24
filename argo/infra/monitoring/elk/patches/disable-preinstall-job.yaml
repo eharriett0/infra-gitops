@@ -4,3 +4,4 @@ metadata:
   name: pre-install-elk-kibana-kibana
   namespace: elk
 $patch: delete
+spec: {}

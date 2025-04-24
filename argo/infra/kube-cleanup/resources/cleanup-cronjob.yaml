@@ -3,6 +3,8 @@ kind: CronJob
 metadata:
   name: cleanup-dead-pods
   namespace: kube-system
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   schedule: "*/30 * * * *"  # Every 30 minutes
   jobTemplate:
