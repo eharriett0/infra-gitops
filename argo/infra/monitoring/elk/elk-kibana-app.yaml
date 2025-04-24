@@ -18,7 +18,7 @@ spec:
       values: |
         service:
           type: NodePort
-        elasticsearchHosts: "https://elasticsearch-master.elk.svc.cluster.local:9200"
+        elasticsearchHosts: "http://elasticsearch-master.elk.svc.cluster.local:9200"
         elasticsearchSSL: false
         # elasticsearchCertificateAuthorities:
         #   - /usr/share/kibana/config/certs/ca.crt
