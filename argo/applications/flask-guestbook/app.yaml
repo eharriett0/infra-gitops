@@ -19,7 +19,7 @@ spec:
         - values.yaml
       values: |
         podAnnotations:
-          reloader.stakater.com/match: "true"
+          reloader.stakater.com/auto: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: guestbook
