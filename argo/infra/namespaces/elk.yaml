@@ -1,0 +1,5 @@
+# FILE: argo/infra/namespaces/elk.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: elk
