@@ -11,6 +11,9 @@ spec:
     targetRevision: 1.0.82
     helm:
       releaseName: reloader
+      values: |
+        commonLabels:
+          app.kubernetes.io/name: reloader
   destination:
     server: https://kubernetes.default.svc
     namespace: reloader
@@ -18,5 +21,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  syncOptions:
+    - CreateNamespace=true
