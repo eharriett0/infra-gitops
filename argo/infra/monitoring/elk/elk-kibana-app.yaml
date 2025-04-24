@@ -22,14 +22,6 @@ spec:
         elasticsearchSSL: true
         elasticsearchCertificateAuthorities:
           - /usr/share/kibana/config/certs/ca.crt
-        extraVolumes:
-          - name: elasticsearch-certs
-            secret:
-              secretName: elasticsearch-master-certs
-        extraVolumeMounts:
-          - name: elasticsearch-certs
-            mountPath: /usr/share/kibana/config/certs
-            readOnly: true
   syncPolicy:
     automated:
       prune: true
