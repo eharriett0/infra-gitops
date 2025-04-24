@@ -19,6 +19,9 @@ spec:
           auth:
             environment: development
             providers: {}
+            allowGuestAccess: true
+          signIn:
+            enabled: false
         catalog:
           locations:
             - type: url
