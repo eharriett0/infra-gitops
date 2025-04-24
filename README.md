@@ -18,6 +18,7 @@ This checklist tracks what’s needed to make this Kubernetes cluster secure, ob
 ## 📈 Tier 2 - Observability
 
 - [ ] Hook Fluent Bit into app logs (e.g. guestbook, sentiment-service)
+- [ ] Deploy Kiali dashboard for Istio mesh observability
 - [ ] Add Alertmanager rules:
   - [ ] PodCrashLoop alerts
   - [ ] Elasticsearch disk > 80%

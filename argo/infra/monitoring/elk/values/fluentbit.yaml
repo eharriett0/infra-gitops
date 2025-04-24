@@ -1,0 +1,41 @@
+backend:
+  type: es
+  es:
+    host: https://elasticsearch-master.elk.svc.cluster.local
+    port: 9200
+    tls: true
+    tls.verify: false  # Optional for self-signed certs
+    tls.ca_file: /fluent-bit/tls/ca.crt
+
+input:
+  tail:
+    - name: guestbook-logs
+      path: /var/log/containers/*guestbook*.log
+      parser: docker
+      tag: guestbook
+    - name: sentiment-logs
+      path: /var/log/containers/*sentiment*.log
+      parser: docker
+      tag: sentiment
+
+filters:
+  - name: kubernetes
+    match: guestbook
+    kube_tag_prefix: kube.var.log.containers.
+    merge_log: true
+    keep_log: true
+  - name: kubernetes
+    match: sentiment
+    kube_tag_prefix: kube.var.log.containers.
+    merge_log: true
+    keep_log: true
+
+extraVolumeMounts:
+  - name: elasticsearch-certs
+    mountPath: /fluent-bit/tls
+    readOnly: true
+
+extraVolumes:
+  - name: elasticsearch-certs
+    secret:
+      secretName: elasticsearch-master-certs

@@ -5,6 +5,8 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+  labels:
+    app.kubernetes.io/name: fluentbit
 spec:
   project: default
   destination:
@@ -15,23 +17,9 @@ spec:
     chart: fluent-bit
     targetRevision: 2.3.0
     helm:
-      values: |
-        backend:
-          type: es
-          es:
-            host: https://elasticsearch-master.elk.svc.cluster.local
-            port: 9200
-            tls: true
-            tls.verify: false  # Optional for self-signed certs
-            tls.ca_file: /fluent-bit/tls/ca.crt
-        extraVolumeMounts:
-          - name: elasticsearch-certs
-            mountPath: /fluent-bit/tls
-            readOnly: true
-        extraVolumes:
-          - name: elasticsearch-certs
-            secret:
-              secretName: elasticsearch-master-certs
+      releaseName: fluentbit
+      valueFiles:
+        - values/fluentbit.yaml
   syncPolicy:
     automated:
       prune: true
