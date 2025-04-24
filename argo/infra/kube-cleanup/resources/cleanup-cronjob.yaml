@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-dead-pods
+  namespace: kube-system
+spec:
+  schedule: "*/30 * * * *"  # Every 30 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cleanup
+              image: bitnami/kubectl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  kubectl delete pod --field-selector=status.phase=Failed --all-namespaces
+                  kubectl get pods --all-namespaces --field-selector=status.reason=Evicted -o custom-columns=:metadata.name,:metadata.namespace --no-headers | while read pod ns; do
+                    kubectl delete pod "$pod" -n "$ns"
+                  done
+          restartPolicy: OnFailure
