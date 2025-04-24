@@ -18,7 +18,15 @@ spec:
           minimumMasterNodes: 1
           tls:
             selfSignedCertificate:
-              enabled: true
+              enabled: false
+          volumeMounts:
+            - name: certs
+              mountPath: /usr/share/elasticsearch/config/certs
+              readOnly: true
+          extraVolumes:
+            - name: certs
+              secret:
+                secretName: elasticsearch-master-certs
     - repoURL: https://helm.elastic.co
       chart: kibana
       targetRevision: 8.5.1
@@ -26,7 +34,7 @@ spec:
         values: |
           service:
             type: NodePort
-          elasticsearchHosts: "http://elasticsearch-master.elk.svc.cluster.local:9200"
+          elasticsearchHosts: "https://elasticsearch-master.elk.svc.cluster.local:9200"
           elasticsearchSSL: true
           elasticsearchCertificateAuthorities:
             - /usr/share/kibana/config/certs/ca.crt
@@ -46,8 +54,19 @@ spec:
           backend:
             type: es
             es:
-              host: elasticsearch-master.elk.svc.cluster.local
+              host: https://elasticsearch-master.elk.svc.cluster.local
               port: 9200
+              tls: true
+              tls.verify: false  # Optional if using self-signed cert
+              tls.ca_file: /fluent-bit/tls/ca.crt
+          extraVolumeMounts:
+            - name: elasticsearch-certs
+              mountPath: /fluent-bit/tls
+              readOnly: true
+          extraVolumes:
+            - name: elasticsearch-certs
+              secret:
+                secretName: elasticsearch-master-certs
   syncPolicy:
     automated:
       prune: true
