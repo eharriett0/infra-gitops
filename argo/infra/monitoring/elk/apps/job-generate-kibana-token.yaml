@@ -1,63 +1,57 @@
 apiVersion: batch/v1
-kind: Job
+kind: CronJob
 metadata:
   name: elk-generate-kibana-token
   namespace: elk
   labels:
     app: elk-generate-kibana-token
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/eharriett0/infra-gitops.git
-    targetRevision: main
-    path: argo/infra/monitoring/elk/jobs
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: elk
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-  ttlSecondsAfterFinished: 60
-  template:
+  schedule: "*/5 * * * *"  # Every 5 minutes (can later change to @daily if you want)
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
     spec:
-      serviceAccountName: default
-      restartPolicy: Never
-      containers:
-        - name: generate-token
-          image: curlimages/curl:latest
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              set -e
+      ttlSecondsAfterFinished: 60  # Clean up finished Jobs after 1 minute
+      template:
+        spec:
+          serviceAccountName: default
+          restartPolicy: Never
+          containers:
+            - name: generate-token
+              image: curlimages/curl:latest
+              imagePullPolicy: Always
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -e
 
-              echo "Waiting for Elasticsearch to respond..."
-              until curl -k -s https://elasticsearch-master.elk.svc:9200/_cluster/health | grep -q '"status"'; do
-                echo "Elasticsearch not reachable yet. Sleeping 5 seconds..."
-                sleep 5
-              done
+                  echo "Waiting for Elasticsearch to respond..."
+                  until curl -k -s https://elasticsearch-master.elk.svc:9200/_cluster/health | grep -q '"status"'; do
+                    echo "Elasticsearch not reachable yet. Sleeping 5 seconds..."
+                    sleep 5
+                  done
 
-              echo "Requesting service token from Elasticsearch..."
-              RESPONSE=$(curl -k -u "elastic:${ELASTIC_PASSWORD}" -X POST "https://elasticsearch-master.elk.svc:9200/_security/service/elastic/kibana/elk-kibana/token" -H "Content-Type: application/json" -s)
+                  echo "Requesting service token from Elasticsearch..."
+                  RESPONSE=$(curl -k -u "elastic:${ELASTIC_PASSWORD}" -X POST "https://elasticsearch-master.elk.svc:9200/_security/service/elastic/kibana/elk-kibana/token" -H "Content-Type: application/json" -s)
 
-              TOKEN=$(echo "$RESPONSE" | grep -o '"value":"[^"]*"' | sed 's/"value":"\(.*\)"/\1/')
+                  TOKEN=$(echo "$RESPONSE" | grep -o '"value":"[^"]*"' | sed 's/"value":"\(.*\)"/\1/')
 
-              if [ -z "$TOKEN" ]; then
-                echo "ERROR: Could not retrieve the token!"
-                echo "Response was: $RESPONSE"
-                exit 1
-              fi
+                  if [ -z "$TOKEN" ]; then
+                    echo "ERROR: Could not retrieve the token!"
+                    echo "Response was: $RESPONSE"
+                    exit 1
+                  fi
 
-              echo "Creating Kubernetes Secret with the token..."
-              kubectl create secret generic elk-kibana-kibana-es-token \
-                --namespace elk \
-                --from-literal=token="$TOKEN" \
-                --dry-run=client -o yaml | kubectl apply -f -
+                  echo "Creating Kubernetes Secret with the token..."
+                  kubectl create secret generic elk-kibana-kibana-es-token \
+                    --namespace elk \
+                    --from-literal=token="$TOKEN" \
+                    --dry-run=client -o yaml | kubectl apply -f -
 
-              echo "Successfully created the token and stored it in Kubernetes."
-      env:
-        - name: ELASTIC_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: elasticsearch-master-credentials
-              key: password
+                  echo "Successfully created the token and stored it in Kubernetes."
+          env:
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-master-credentials
+                  key: password
