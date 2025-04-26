@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: elk-generate-kibana-token
+  namespace: elk
+  labels:
+    app: elk-generate-kibana-token
+spec:
+  ttlSecondsAfterFinished: 60  # <-- Auto-delete the job 1 minute after completion
+  template:
+    spec:
+      serviceAccountName: default
+      restartPolicy: Never
+      containers:
+        - name: generate-token
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              set -e
+
+              echo "Waiting for Elasticsearch to become available..."
+              until curl -k -s https://elasticsearch-master.elk.svc:9200/_cluster/health | grep -q '"status":"green"'; do
+                echo "Elasticsearch not ready yet. Sleeping 5 seconds..."
+                sleep 5
+              done
+
+              echo "Creating or retrieving the Kibana service account token..."
+              TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana elk-kibana 2>/dev/null | grep -o 'AAE[A-Za-z0-9\-_]*' || true)
+
+              if [ -z "$TOKEN" ]; then
+                echo "Token already exists or failed to create. Trying to retrieve existing token..."
+                TOKEN=$(cat /usr/share/elasticsearch/config/service_tokens/elastic/kibana/elk-kibana || true)
+              fi
+
+              if [ -z "$TOKEN" ]; then
+                echo "ERROR: Could not create or retrieve the token!"
+                exit 1
+              fi
+
+              echo "Creating Kubernetes Secret with the token..."
+              kubectl create secret generic elk-kibana-kibana-es-token \
+                --namespace elk \
+                --from-literal=token="$TOKEN" \
+                --dry-run=client -o yaml | kubectl apply -f -
+
+              echo "Successfully created the token and stored it in Kubernetes."
