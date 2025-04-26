@@ -13,24 +13,24 @@ spec:
       restartPolicy: Never
       containers:
         - name: generate-token
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
-          command: ["/bin/bash", "-c"]
+          image: bitnami/kubectl:latest
+          command: ["/bin/sh", "-c"]
           args:
             - |
               set -e
 
               echo "Waiting for Elasticsearch to respond..."
-              until curl -k -s https://elasticsearch-master.elk.svc:9200/_cluster/health | grep -q '"status"'; do
+              until kubectl exec -n elk elasticsearch-master-0 -- curl -k -s https://localhost:9200/_cluster/health | grep -q '"status"'; do
                 echo "Elasticsearch not reachable yet. Sleeping 5 seconds..."
                 sleep 5
               done
 
               echo "Creating or retrieving the Kibana service account token..."
-              TOKEN=$(/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana elk-kibana 2>/dev/null | grep -o 'AAE[A-Za-z0-9\-_]*' || true)
+              TOKEN=$(kubectl exec -n elk elasticsearch-master-0 -- bash -c '/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana elk-kibana 2>/dev/null' | grep -o 'AAE[A-Za-z0-9\-_]*' || true)
 
               if [ -z "$TOKEN" ]; then
                 echo "Token already exists or failed to create. Trying to retrieve existing token..."
-                TOKEN=$(cat /usr/share/elasticsearch/config/service_tokens/elastic/kibana/elk-kibana || true)
+                TOKEN=$(kubectl exec -n elk elasticsearch-master-0 -- cat /usr/share/elasticsearch/config/service_tokens/elastic/kibana/elk-kibana || true)
               fi
 
               if [ -z "$TOKEN" ]; then
