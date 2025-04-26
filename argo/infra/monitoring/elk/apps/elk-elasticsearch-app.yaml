@@ -18,6 +18,8 @@ spec:
       values: |
         replicas: 1
         minimumMasterNodes: 1
+        securityContext:
+          fsGroup: 1000
         tls:
           selfSignedCertificate:
             enabled: false
