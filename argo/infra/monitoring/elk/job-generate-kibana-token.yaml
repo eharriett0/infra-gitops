@@ -6,7 +6,7 @@ metadata:
   labels:
     app: elk-generate-kibana-token
 spec:
-  ttlSecondsAfterFinished: 60  # <-- Auto-delete the job 1 minute after completion
+  ttlSecondsAfterFinished: 60  # Auto-delete the job 1 minute after it finishes
   template:
     spec:
       serviceAccountName: default
@@ -15,12 +15,18 @@ spec:
         - name: generate-token
           image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
           command: ["/bin/bash", "-c"]
+          env:
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-master-credentials
+                  key: password
           args:
             - |
               set -e
 
               echo "Waiting for Elasticsearch to become available..."
-              until curl -k -s https://elasticsearch-master.elk.svc:9200/_cluster/health | grep -q '"status":"green"'; do
+              until curl -u elastic:${ELASTIC_PASSWORD} -k -s https://elasticsearch-master.elk.svc:9200/_cluster/health | grep -q '"status":"green"'; do
                 echo "Elasticsearch not ready yet. Sleeping 5 seconds..."
                 sleep 5
               done
