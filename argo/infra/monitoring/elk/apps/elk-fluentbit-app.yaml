@@ -19,7 +19,7 @@ spec:
     helm:
       releaseName: fluentbit
       valueFiles:
-        - values/fluentbit.yaml
+        - ../values/fluentbit.yaml
   syncPolicy:
     automated:
       prune: true
