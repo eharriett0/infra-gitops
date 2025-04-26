@@ -1,4 +1,3 @@
 resources:
   - elk-kibana-app.yaml
   - secrets/sealed-elk-token.yaml
-  - job-generate-kibana-token.yaml
