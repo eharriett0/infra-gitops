@@ -6,7 +6,7 @@ metadata:
   labels:
     app: elk-generate-kibana-token
 spec:
-  ttlSecondsAfterFinished: 60  # Auto-delete the job 1 minute after finishing
+  ttlSecondsAfterFinished: 60
   template:
     spec:
       serviceAccountName: default
@@ -25,11 +25,22 @@ spec:
                 sleep 5
               done
 
-              echo "Creating or retrieving the Kibana service account token..."
-              TOKEN=$(kubectl exec -n elk elasticsearch-master-0 -- bash -c '/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana elk-kibana 2>/dev/null' | grep -o 'AAE[A-Za-z0-9\-_]*' || true)
+              echo "Ensuring service token directory exists..."
+              kubectl exec -n elk elasticsearch-master-0 -- mkdir -p /usr/share/elasticsearch/config/service_tokens/elastic/kibana || true
+
+              echo "Attempting to create the Kibana service account token..."
+              for i in $(seq 1 5); do
+                TOKEN=$(kubectl exec -n elk elasticsearch-master-0 -- bash -c '/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana elk-kibana 2>/dev/null' | grep -o 'AAE[A-Za-z0-9\-_]*' || true)
+                if [ ! -z "$TOKEN" ]; then
+                  echo "Successfully created a new token."
+                  break
+                fi
+                echo "Create attempt $i failed. Retrying in 5 seconds..."
+                sleep 5
+              done
 
               if [ -z "$TOKEN" ]; then
-                echo "Token already exists or failed to create. Trying to retrieve existing token..."
+                echo "Trying to retrieve existing Kibana service token..."
                 TOKEN=$(kubectl exec -n elk elasticsearch-master-0 -- cat /usr/share/elasticsearch/config/service_tokens/elastic/kibana/elk-kibana || true)
               fi
 
